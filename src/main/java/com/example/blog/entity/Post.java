@@ -3,6 +3,8 @@ package com.example.blog.entity;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.Set;
+
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -11,6 +13,13 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToMany
+    @JoinTable(
+            name = "post_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags;
 
     @NotBlank(message = "Title is required")
     private String title;
@@ -24,18 +33,28 @@ public class Post {
 
     private String image;
     private String category;
-    private String tags;
 
     @Column(updatable = false)
     private Timestamp postDate;
 
     private String description;
 
+//    @ManyToOne
+//    @JoinColumn(name = "user_id", nullable = false) // внешний ключ в таблице post
+//    private User user;
+//
+//    public User getUser() {
+//        return user;
+//    }
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     @PrePersist
     protected void onCreate() {
         this.postDate = new Timestamp(System.currentTimeMillis());
     }
+
 
     public Long getId() {
         return id;
@@ -85,11 +104,11 @@ public class Post {
         this.category = category;
     }
 
-    public String getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 

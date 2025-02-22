@@ -1,16 +1,17 @@
 package com.example.blog.controller;
 
 import com.example.blog.entity.Post;
+import com.example.blog.entity.Tag;
 import com.example.blog.repository.PostRepository;
+import com.example.blog.repository.TagRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -18,9 +19,11 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class PostController {
     private final PostRepository repository;
+    private final TagRepository tagRepository;
 
-    public PostController(PostRepository repository) {
+    public PostController(PostRepository repository, TagRepository tagRepository) {
         this.repository = repository;
+        this.tagRepository = tagRepository;
     }
 
     @GetMapping
@@ -75,7 +78,19 @@ public class PostController {
                 case "author" -> post.setAuthor((String) value);
                 case "image" -> post.setImage((String) value);
                 case "category" -> post.setCategory((String) value);
-                case "tags" -> post.setTags((String) value);
+                case "tags" -> {
+                    if (value instanceof String tagsString) {
+                        Set<Tag> tags = Arrays.stream(tagsString.split(","))
+                                .map(String::trim)
+                                .map(tagName -> tagRepository.findByName(tagName).orElseGet(() -> {
+                                    Tag newTag = new Tag();
+                                    newTag.setName(tagName);
+                                    return tagRepository.save(newTag);
+                                }))
+                                .collect(Collectors.toSet());
+                        post.setTags(tags);
+                    }
+                }
                 case "postDate" -> post.setPostDate((Timestamp) value);
                 case "description" -> post.setDescription((String) value);
             }

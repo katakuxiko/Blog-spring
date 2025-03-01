@@ -35,15 +35,25 @@ public class UserProfileService {
         return userProfileRepository.findByUserId(userId);
     }
 
+    // Проверить, есть ли у пользователя профиль
+    public boolean userHasProfile(Long userId) {
+        return userProfileRepository.findByUserId(userId).isPresent();
+    }
+
     // Создать новый профиль
     @Transactional
     public UserProfile createProfile(Long userId, UserProfile userProfile) {
+        if (userHasProfile(userId)) {
+            throw new RuntimeException("Profile already exists for this user");
+        }
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        userProfile.setUser(user); // 🔥 Связываем профиль с пользователем
+        userProfile.setUser(user); // Связываем профиль с пользователем
         return userProfileRepository.save(userProfile);
     }
+
 
 
     // Обновить профиль по ID

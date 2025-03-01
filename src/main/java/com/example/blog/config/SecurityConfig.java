@@ -51,8 +51,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register", "/auth/login", "/register", "/authenticate").permitAll() // Разрешаем доступ
-                        .anyRequest().authenticated() // Остальные требуют аутентификации
+                        .requestMatchers("/auth/register", "/auth/login", "/register", "/authenticate","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/login").permitAll() // Разрешаем доступ
+                        .anyRequest().permitAll() // Остальные требуют аутентификации
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Включаем CORS
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -1,6 +1,8 @@
 package com.example.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.sql.Timestamp;
@@ -23,6 +25,8 @@ public class Comment {
     @NotBlank(message = "Content is required")
     private String content;
 
+    @JsonProperty("created_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private Timestamp createdAt;
 
     @PrePersist

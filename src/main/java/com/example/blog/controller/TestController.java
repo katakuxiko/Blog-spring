@@ -24,13 +24,13 @@ public class TestController {
     public ResponseEntity<String> triggerWarning() {
         logger.debug("Вызван эндпоинт /api/test/warn");
         logger.warn("Тестирование предупреждения: Обнаружена потенциальная проблема");
-        return ResponseEntity.ok("Предупреждение залогировано");
+        return ResponseEntity.ok("Предупреждение!");
     }
 
     @GetMapping("/info")
     public ResponseEntity<String> triggerInfo() {
         logger.debug("Вызван эндпоинт /api/test/info");
         logger.info("Тестирование информационного сообщения: Операция выполнена успешно");
-        return ResponseEntity.ok("Информация залогирована");
+        return ResponseEntity.ok("Информация выведена в консоль");
     }
 } 

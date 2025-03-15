@@ -41,19 +41,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            sendUnauthorizedResponse(response, "Missing or invalid Authorization header");
+            filterChain.doFilter(request, response);
             return;
         }
 
         String token = authHeader.substring(7);
-        String username;
-
-        try {
-            username = jwtService.extractUsername(token);
-        } catch (Exception e) {
-            sendUnauthorizedResponse(response, "Invalid or expired token");
-            return;
-        }
+        String username = jwtService.extractUsername(token);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -64,18 +57,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-            } else {
-                sendUnauthorizedResponse(response, "Token is not valid");
-                return;
             }
         }
-
         filterChain.doFilter(request, response);
-    }
-
-    private void sendUnauthorizedResponse(HttpServletResponse response, String message) throws IOException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json");
-        response.getWriter().write("{\"error\": \"" + message + "\"}");
     }
 }

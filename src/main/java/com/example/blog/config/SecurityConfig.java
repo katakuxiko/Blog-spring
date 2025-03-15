@@ -51,7 +51,10 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register", "/auth/login", "/register", "/authenticate","/v3/api-docs/**").permitAll() // Разрешаем доступ
+                        .requestMatchers("/auth/register", "/auth/login", "/register", "/authenticate",
+                                "/v3/api-docs/**",
+                                "/api/test/**",
+                                "/actuator/**").permitAll() // Разрешаем доступ к тестовым эндпоинтам и actuator
                         .anyRequest().authenticated() // Остальные требуют аутентификации
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Включаем CORS

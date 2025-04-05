@@ -270,3 +270,7 @@ Caused by: java.lang.ClassNotFoundException: com.example.blog.config.JwtAuthFilt
 	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:121)
 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:528)
 	... 37 common frames omitted
+2025-03-15 16:13:07 [http-nio-8080-exec-10] ERROR c.e.blog.controller.TestController - Тестирование логирования ошибки 500: Симуляция серверной ошибки
+2025-03-15 16:13:07 [http-nio-8080-exec-10] ERROR c.e.blog.controller.TestController - Тестирование логирования ошибки 500: Симуляция серверной ошибки
+2025-03-15 16:25:52 [http-nio-8080-exec-4] ERROR c.e.blog.controller.TestController - Тестирование логирования ошибки 500: Симуляция серверной ошибки
+2025-03-15 16:25:52 [http-nio-8080-exec-4] ERROR c.e.blog.controller.TestController - Тестирование логирования ошибки 500: Симуляция серверной ошибки

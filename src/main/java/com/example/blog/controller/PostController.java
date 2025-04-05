@@ -107,4 +107,13 @@ public class PostController {
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Post>> searchPosts(@RequestParam String query) {
+        List<Post> posts = repository.searchByQuery(query);
+        if (posts.isEmpty()) {
+            return ResponseEntity.noContent().build(); // No posts found
+        }
+        return ResponseEntity.ok(posts); // Return the posts found based on the query
+    }
 }

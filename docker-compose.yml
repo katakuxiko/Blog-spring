@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # Сервис для Redis
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  # Сервис для PostgreSQL
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_DB: blog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Сервис для вашего Spring Boot приложения
+  blog-app:
+    build: .
+    container_name: blog-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blog
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123123
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+      - postgres
+
+volumes:
+  postgres_data:

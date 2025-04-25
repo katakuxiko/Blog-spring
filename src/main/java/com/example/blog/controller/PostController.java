@@ -5,6 +5,7 @@ import com.example.blog.entity.Tag;
 import com.example.blog.repository.PostRepository;
 import com.example.blog.repository.TagRepository;
 import com.example.blog.service.PostService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -103,6 +104,7 @@ public class PostController {
         return ResponseEntity.ok(post);
     }
 
+    @CacheEvict(value = "posts", key = "#id") // Удаляем пост из кэша
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (!repository.existsById(id)) {

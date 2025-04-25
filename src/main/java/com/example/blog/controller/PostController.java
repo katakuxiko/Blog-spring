@@ -4,6 +4,7 @@ import com.example.blog.entity.Post;
 import com.example.blog.entity.Tag;
 import com.example.blog.repository.PostRepository;
 import com.example.blog.repository.TagRepository;
+import com.example.blog.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +21,13 @@ import java.util.stream.Collectors;
 public class PostController {
     private final PostRepository repository;
     private final TagRepository tagRepository;
+    private final PostService postService;
 
-    public PostController(PostRepository repository, TagRepository tagRepository) {
+
+    public PostController(PostRepository repository, TagRepository tagRepository, PostService postService) {
         this.repository = repository;
         this.tagRepository = tagRepository;
+        this.postService = postService;
     }
 
     @GetMapping
@@ -33,10 +37,10 @@ public class PostController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Post> getById(@PathVariable Long id) {
-        return repository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Post post = postService.getPostById(id);
+        return post != null ? ResponseEntity.ok(post) : ResponseEntity.notFound().build();
     }
+
 
     @PostMapping
     public ResponseEntity<Post> create(@Valid @RequestBody Post post) {
